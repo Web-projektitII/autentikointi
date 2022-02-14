@@ -1,8 +1,10 @@
 <?php
    
-// Database connection
-$polku = "http://localhost";
 $projekti = "autentikointi";
+$http = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https://" : "http://";   
+$local = in_array($_SERVER['REMOTE_ADDR'],array('127.0.0.1','REMOTE_ADDR' => '::1'));  
+$polku = ($local) ? "http://localhost" : $http.$_SERVER['HTTP_HOST'];
+$polku.= "/$projekti";
 
 require '../../../tunnukset.php';
 include('config/db.php');
@@ -90,8 +92,8 @@ include('posti.php');
 
                     // Query
                     $sql = "INSERT INTO users (firstname, lastname, email, mobilenumber, password, token, is_active,
-                    date_time) VALUES ('{$firstname}', '{$lastname}', '{$email}', '{$mobilenumber}', '{$password_hash}', 
-                    '{$token}', '0', now())";
+                    date_time) VALUES ('$firstname', '$lastname', '$email', '$mobilenumber', '$password_hash', 
+                    '$token', '0', now())";
                     
                     // Create mysql query
                     $sqlQuery = mysqli_query($connection, $sql);
